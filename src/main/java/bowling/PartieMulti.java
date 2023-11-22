@@ -6,12 +6,12 @@ public class PartieMulti implements IPartieMultiJoueurs {
 	private HashMap<String, PartieMonoJoueur> laGame;
 	private String[] noms;
 	private int nombreDeJoueurs;
-	private int numeroJoueurAct;
+	private int numeroJoueurAct=-1;
 
 	private String phraseRetour;
 
 	public String getPhraseRetour() {
-		this.phraseRetour = "Prochain tir : joueur " + noms[numeroJoueurAct] + "tour n° " + laGame.get(noms[numeroJoueurAct]).numeroTourCourant() + ", boule n° " + laGame.get(noms[numeroJoueurAct]).numeroProchainLancer();
+		this.phraseRetour = "Prochain tir : joueur " + noms[numeroJoueurAct] + ", tour n° " + laGame.get(noms[numeroJoueurAct]).numeroTourCourant() + ", boule n° " + laGame.get(noms[numeroJoueurAct]).numeroProchainLancer();
 		return phraseRetour;
 	}
 
@@ -54,9 +54,14 @@ public class PartieMulti implements IPartieMultiJoueurs {
 	 */
 	@Override
 	public String enregistreLancer(int nombreDeQuillesAbattues) throws IllegalStateException {
-		if (laGame.get((noms[nombreDeJoueurs - 1])).estTerminee()) {
+		if(numeroJoueurAct==-1){
+			throw new IllegalStateException("La partie n'a pas commencé");
+		}
+		
+		if (laGame.get((noms[0])).numeroTourCourant()==0) {
 			return "Partie terminée";
 		}
+		
 		PartieMonoJoueur joueurPartie = laGame.get(noms[numeroJoueurAct]);
 		joueurPartie.enregistreLancer(nombreDeQuillesAbattues);
 
